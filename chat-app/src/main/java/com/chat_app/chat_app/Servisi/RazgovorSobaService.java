@@ -24,7 +24,10 @@ public class RazgovorSobaService  {
                 .or(() -> {
                     if (kreirajNovuAkoNePostoji) {
 
-                        var razgovorSoba = kreirajSobu(posiljalacID,primilacID)
+                        var razgovorID = kreirajIdRazgovora(posiljalacID,primilacID);
+                        return Optional.of(razgovorID);
+
+
 
                     }
                     return Optional.empty();
@@ -39,14 +42,28 @@ public class RazgovorSobaService  {
 
 
     /// kreiranje razogvor sobe u formatu posiiljalac_prilamac mihajlo_marko
-    public String kreirajSobu(String posiljalacID, String primilacID)
+    public String kreirajIdRazgovora(String posiljalacID, String primilacID)
     {
         var chatID = String.format("%s_%s",posiljalacID,primilacID);
+
         RazgovorSoba posiljalacRecp = RazgovorSoba.builder()
                 .idRazgovora(chatID)
                 .posiljalacID(posiljalacID)
                 .primilacID(primilacID)
                 .build();
+
+        RazgovorSoba primalacRecep = RazgovorSoba.builder()
+                .idRazgovora(chatID)
+                .posiljalacID(primilacID)
+                .primilacID(posiljalacID)
+                .build();
+
+        razgovorSobaRepo.save(posiljalacRecp);
+        razgovorSobaRepo.save(primalacRecep);
+
+
+        return chatID;
+
 
     }
 
