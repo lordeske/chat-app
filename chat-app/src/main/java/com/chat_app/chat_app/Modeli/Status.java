@@ -1,4 +1,4 @@
-package com.chat_app.chat_app.Korisnici;
+package com.chat_app.chat_app.Modeli;
 
 public enum Status {
 

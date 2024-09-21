@@ -1,7 +1,7 @@
 package com.chat_app.chat_app.Repo;
 
-import com.chat_app.chat_app.Korisnici.Korisnik;
-import com.chat_app.chat_app.Korisnici.Status;
+import com.chat_app.chat_app.Modeli.Korisnik;
+import com.chat_app.chat_app.Modeli.Status;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
