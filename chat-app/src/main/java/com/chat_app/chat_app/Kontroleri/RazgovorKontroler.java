@@ -28,7 +28,7 @@ public class RazgovorKontroler {
     @GetMapping(path = "/poruke/{posiljalacID}/{primalacID}")
     public ResponseEntity<List<Razgovor>> prikaziPoruke(
             @PathVariable ("posiljalacID") String posiljalacID,
-            @Payload ("primalacID")  String primalacID
+            @PathVariable ("primalacID")  String primalacID
     )
     {
 
@@ -48,12 +48,11 @@ public class RazgovorKontroler {
 
         Razgovor sacuvanaPoruka = razgovorService.sacuvaj(razgovor);
         chat.convertAndSendToUser(
-
-                /// !!! poruke formata mihajlo/queue/poruke !!!!
-                razgovor.getPrimalacID(),"queue/poruke", null,
-                PorukaNotif.builder()
+                razgovor.getPrimalacID(),"/queue/poruke", PorukaNotif.builder()
                         .id(sacuvanaPoruka.getId())
-                        .sa
+                        .posiljalacID(sacuvanaPoruka.getPosiljalacID())
+                        .primalacID(sacuvanaPoruka.getPrimalacID())
+                        .poruka(sacuvanaPoruka.getPoruka())
         );
 
 
