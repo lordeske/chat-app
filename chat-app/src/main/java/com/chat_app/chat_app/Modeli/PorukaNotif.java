@@ -2,9 +2,9 @@ package com.chat_app.chat_app.Modeli;
 
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

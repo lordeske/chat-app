@@ -44,11 +44,8 @@ public class VebSoketKonfiguracija implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        /// poruke za kontrolere
-        registry.setApplicationDestinationPrefixes("/app");
-        ///borker
         registry.enableSimpleBroker("/korisnik");
-        ///za specificne korisnike
+        registry.setApplicationDestinationPrefixes("/app");
         registry.setUserDestinationPrefix("/korisnik");
     }
 }

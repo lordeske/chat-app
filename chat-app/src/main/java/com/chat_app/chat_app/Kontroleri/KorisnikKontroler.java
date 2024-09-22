@@ -25,7 +25,7 @@ public class KorisnikKontroler {
 
     @MessageMapping("/korisnik.dodajKorisnika")
     //Novi queue, za slanje
-    @SendTo("/korisnik/topic")
+    @SendTo("/korisnik/public")
     public Korisnik sacuvajKorisnika(@Payload Korisnik korisnik)
     {
         korisnikServis.sacuvajKorisnika(korisnik);
@@ -36,7 +36,7 @@ public class KorisnikKontroler {
 
 
     @MessageMapping("/kornsik.diskonektujKorisnika")
-    @SendTo("korisnik/topic")
+    @SendTo("korisnik/public")
     public Korisnik diskonektuj(@Payload Korisnik korisnik)
     {
        korisnikServis.diskonektuj(korisnik);

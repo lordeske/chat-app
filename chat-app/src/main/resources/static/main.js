@@ -1,243 +1,189 @@
-const korisnickaStrana = document.querySelector('#username-page');
-const razgovorStrana = document.querySelector('#chat-page');
-const usernameForma = document.querySelector('#usernameForm');
-const porukaForma = document.querySelector('#messageForm');
-const inputPoruke = document.querySelector('#message');
-const Konektovanje = document.querySelector('.connecting');
-const razgovorPolje = document.querySelector('#chat-messages');
+
+const usernamePage = document.querySelector('#username-page');
+const chatPage = document.querySelector('#chat-page');
+const usernameForm = document.querySelector('#usernameForm');
+const messageForm = document.querySelector('#messageForm');
+const messageInput = document.querySelector('#message');
+const connectingElement = document.querySelector('.connecting');
+const chatArea = document.querySelector('#chat-messages');
 const logout = document.querySelector('#logout');
 
-let stompKlijent = null;
+let stompClient = null;
 let nickname = null;
-let pravoIme = null;
-let selektovanKorisnikID = null;
+let fullname = null;
+let selectedUserId = null;
 
-const kokentujSe = (event) => {
+function connect(event) {
+    nickname = document.querySelector('#nickname').value.trim();
+    fullname = document.querySelector('#fullname').value.trim();
+
+    if (nickname && fullname) {
+        usernamePage.classList.add('hidden');
+        chatPage.classList.remove('hidden');
+
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, onConnected, onError);
+    }
     event.preventDefault();
-
-    nickname = document.querySelector("#nickname").value.trim();
-    pravoIme = document.querySelector("#fullname").value.trim();
-
-    if (nickname && pravoIme) {
-        korisnickaStrana.classList.add("hidden");
-        razgovorStrana.classList.remove("hidden");
-
-        // Inicijalizujemo WebSocket konekciju
-        var soket = new SockJS("/ws");
-        stompKlijent = Stomp.over(soket);
-
-        stompKlijent.connect({}, onConnected, onError);
-    }
-};
-
-const onConnected = () => {
-    // Prijava u queue za poruke, i za aktivni status
-    stompKlijent.subscribe(`/korisnik/${nickname}/queue/poruke`, onPorukaPrimljena);
-    stompKlijent.subscribe("korisnik/public", onPorukaPrimljena);
-
-    // Podeeseno u bekendu sta se poziva na koju putanju a tijelo toga se salje na drugu
-    stompKlijent.send("/app/korisnik.dodajKorisnika", {}, JSON.stringify({
-        korisnickoIme: nickname,
-        imeIPrezime: pravoIme,
-        status: "NA_MREZI"
-    }));
-
-    prikaziAktivneKorisnike();
-    Konektovanje.classList.remove("hidden");
-}
-
-const onError = () => {
-    console.error("Greška prilikom konekcije.");
-}
-
-const onPorukaPrimljena = () => {
-
-
-
-
-
-
-
-
-
-}
-
-const prikaziAktivneKorisnike = async () => {
-    try {
-        const response = await fetch("/korisnici");
-        let konektovaniKorsinici = await response.json();
-
-        konektovaniKorsinici = konektovaniKorsinici.filter((korisnik) => korisnik.korisnickoIme !== nickname);
-
-        const konektovaniKorisniciLista = document.getElementById("connectedUsers");
-        konektovaniKorisniciLista.innerHTML = '';
-
-        konektovaniKorsinici.forEach(korisnik => {
-            prosiriKorisnickiElement(korisnik, konektovaniKorisniciLista);
-
-            if (konektovaniKorsinici.indexOf(korisnik) < konektovaniKorsinici.length - 1) {
-                const separator = document.createElement("li");
-                separator.classList.add("separator");
-                konektovaniKorisniciLista.appendChild(separator);
-            }
-        });
-    } catch (error) {
-        console.error("Greška prilikom dobijanja liste korisnika:", error);
-    }
-}
-
-const prosiriKorisnickiElement = (korisnik, konektovaniKorsiniciLista) => {
-    const lista = document.createElement("li");
-    lista.classList.add("user-item");
-    lista.id = korisnik.korisnickoIme;
-
-    const korisnickaSlika = document.createElement("img");
-    korisnickaSlika.src = "../img/korisnika_slika.png";
-    korisnickaSlika.alt = korisnik.imeIPrezime;
-
-    const korisnickiSpan = document.createElement("span");
-    korisnickiSpan.textContent = korisnik.imeIPrezime;
-
-    const primljenePoruke = document.createElement("span");
-    primljenePoruke.textContent = 0;
-    primljenePoruke.classList.add("nbr-msg", "hidden");
-
-    lista.appendChild(korisnickaSlika);
-    lista.appendChild(korisnickiSpan);
-    lista.appendChild(primljenePoruke);
-
-    lista.addEventListener("click", izabraniKorisnik);
-
-    konektovaniKorsiniciLista.appendChild(lista);
 }
 
 
-const izabraniKorisnik = (event) =>
-{
-    document.querySelectorAll(".user-item").forEach(itme => item.classList.remove("active"));
-    porukaForma.classList.remove("hidden");
+function onConnected() {
+    stompClient.subscribe(`/korisnik/${nickname}/queue/poruke`, onMessageReceived);
+    stompClient.subscribe(`/korisnik/public`, onMessageReceived);
 
-    const kliknutiKorisnik = event.getCurrentTarger;
-    kliknutiKorisnik.classList.add("active");
-
-    selektovanKorisnikID = kliknutiKorisnik.getAtribute("id");
-
-    fetchAndDisplayKorisnickiChat().then();
-
-
-    const nbrPoruka = kliknutiKorisnik.querySelector(".nbr-msg");
-    nbrPoruka.classList.add("hidden");
-
-
-
+    // register the connected user
+    stompClient.send("/app/korisnik.dodajKorisnika",
+        {},
+        JSON.stringify({korisnickoIme: nickname, imeIPrezime: fullname, status: 'NA_MREZI'})
+    );
+    document.querySelector('#connected-user-fullname').textContent = fullname;
+    findAndDisplayConnectedUsers().then();
 }
 
+async function findAndDisplayConnectedUsers() {
+    const connectedUsersResponse = await fetch('/korisnici');
+    let connectedUsers = await connectedUsersResponse.json();
+    connectedUsers = connectedUsers.filter(user => user.korisnickoIme !== nickname);
+    const connectedUsersList = document.getElementById('connectedUsers');
+    connectedUsersList.innerHTML = '';
 
-const fetchAndDisplayKorisnickiChat = async () =>
-{
-
-    try
-    {
-        const userChatResp  = await (`/poruke/${nickname}/${selektovanKorisnikID}`)
-
-        const userChat = await userChatResp.json();
-
-        razgovorPolje.innerHTML = "";
-
-        userChat.forEach(chat =>
-        {
-            prikaziPoruke(chat.posiljalacID, chat.poruka);
-
-        })
-
-        razgovorPolje.scrollTop = razgovorPolje.scrollHeight;
-
-
-
-    }
-    catch (err)
-    {}
-
-
-
-
-
-}
-
-const prikaziPoruke = (posiljalacID, kontent) =>
-{
-
-       const porukaKonteinter = document.createElement("div");
-
-       porukaKonteinter.classList.add("message");
-
-
-
-        /// Lijevo ili denso
-       if(posiljalacID === nickname)
-       {
-
-        porukaKonteinter.classList.add("sender")
-
-       }
-       else
-       {
-        porukaKonteinter.classList.add("reciever");
-       }
-
-
-       const poruka = document.createElement("p");
-       poruka.textContent= content;
-
-       porukaKonteinter.appendChild(porukaKonteinter);
-       razgovorPolje.appendChild(porukaKonteinter);
-
-
-}
-
-const  posaljiPoruku = (event) =>
-{
-    event.preventDefault();
-
-    const messContent = inputPoruke.value.value.trim();
-
-
-    if (messContent && stompKlijent)
-    {
-
-
-        var Poruka =  {
-
-            posiljalacID : nickname,
-            primalacID : selektovanKorisnikID,
-            poruka : messContent,
-            datum : new Date()
-
-
+    connectedUsers.forEach(user => {
+        appendUserElement(user, connectedUsersList);
+        if (connectedUsers.indexOf(user) < connectedUsers.length - 1) {
+            const separator = document.createElement('li');
+            separator.classList.add('separator');
+            connectedUsersList.appendChild(separator);
         }
+    });
+}
 
-        stompKlijent.send("/app/razgovor" , {} , JSON.stringify(Poruka));
-        prikaziPoruke(nickname, messContent);
-        inputPoruke.value = "";
+function appendUserElement(user, connectedUsersList) {
+    const listItem = document.createElement('li');
+    listItem.classList.add('user-item');
+    listItem.id = user.korisnickoIme;
 
+    const userImage = document.createElement('img');
+    userImage.src = '../img/user_icon.png';
+    userImage.alt = user.imeIPrezime;
 
+    const usernameSpan = document.createElement('span');
+    usernameSpan.textContent = user.imeIPrezime;
 
+    const receivedMsgs = document.createElement('span');
+    receivedMsgs.textContent = '0';
+    receivedMsgs.classList.add('nbr-msg', 'hidden');
 
+    listItem.appendChild(userImage);
+    listItem.appendChild(usernameSpan);
+    listItem.appendChild(receivedMsgs);
 
-    }
+    listItem.addEventListener('click', userItemClick);
 
-    razgovorPolje.scrollTop = razgovorPolje.scrollHeight;
-    event.preventDefault();
+    connectedUsersList.appendChild(listItem);
+}
 
+function userItemClick(event) {
+    document.querySelectorAll('.user-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    messageForm.classList.remove('hidden');
 
+    const clickedUser = event.currentTarget;
+    clickedUser.classList.add('active');
 
+    selectedUserId = clickedUser.getAttribute('id');
+    fetchAndDisplayUserChat().then();
 
-
+    const nbrMsg = clickedUser.querySelector('.nbr-msg');
+    nbrMsg.classList.add('hidden');
+    nbrMsg.textContent = '0';
 
 }
 
+function displayMessage(senderId, content) {
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('message');
+    if (senderId === nickname) {
+        messageContainer.classList.add('sender');
+    } else {
+        messageContainer.classList.add('receiver');
+    }
+    const message = document.createElement('p');
+    message.textContent = content;
+    messageContainer.appendChild(message);
+    chatArea.appendChild(messageContainer);
+}
+
+async function fetchAndDisplayUserChat() {
+    const userChatResponse = await fetch(`/poruke/${nickname}/${selectedUserId}`);
+    const userChat = await userChatResponse.json();
+    chatArea.innerHTML = '';
+    userChat.forEach(chat => {
+        displayMessage(chat.posiljalacID, chat.poruka);
+    });
+    chatArea.scrollTop = chatArea.scrollHeight;
+}
 
 
+function onError() {
+    connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
+    connectingElement.style.color = 'red';
+}
 
-usernameForma.addEventListener("submit", kokentujSe, true);
-porukaForma.addEventListener("submit" , posaljiPoruku(true))
+
+function sendMessage(event) {
+    const messageContent = messageInput.value.trim();
+    if (messageContent && stompClient) {
+        const chatMessage = {
+            posiljalacID: nickname,
+            primalacID: selectedUserId,
+            poruka: messageInput.value.trim(),
+            datum: new Date()
+        };
+        stompClient.send("/app/razgovor", {}, JSON.stringify(chatMessage));
+        displayMessage(nickname, messageInput.value.trim());
+        messageInput.value = '';
+    }
+    chatArea.scrollTop = chatArea.scrollHeight;
+    event.preventDefault();
+}
+
+
+async function onMessageReceived(payload) {
+    await findAndDisplayConnectedUsers();
+    console.log('Message received', payload);
+    const message = JSON.parse(payload.body);
+    if (selectedUserId && selectedUserId === message.posiljalacID) {
+        displayMessage(message.posiljalacID, message.poruka);
+        chatArea.scrollTop = chatArea.scrollHeight;
+    }
+
+    if (selectedUserId) {
+        document.querySelector(`#${selectedUserId}`).classList.add('active');
+    } else {
+        messageForm.classList.add('hidden');
+    }
+
+    const notifiedUser = document.querySelector(`#${message.posiljalacID}`);
+    if (notifiedUser && !notifiedUser.classList.contains('active')) {
+        const nbrMsg = notifiedUser.querySelector('.nbr-msg');
+        nbrMsg.classList.remove('hidden');
+        nbrMsg.textContent = '';
+    }
+}
+
+function onLogout() {
+    stompClient.send("/app/kornsik.diskonektujKorisnika",
+        {},
+        JSON.stringify({korisnickoIme: nickname, imeIPrezime: fullname, status: 'VAN_MREZE'})
+    );
+    window.location.reload();
+}
+
+usernameForm.addEventListener('submit', connect, true); // step 1
+messageForm.addEventListener('submit', sendMessage, true);
+logout.addEventListener('click', onLogout, true);
+window.onbeforeunload = () => onLogout();
