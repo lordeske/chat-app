@@ -11,7 +11,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RazgovorSobaService  {
 
-    private static RazgovorSobaRepo razgovorSobaRepo;
+    private final RazgovorSobaRepo razgovorSobaRepo;
 
 
 

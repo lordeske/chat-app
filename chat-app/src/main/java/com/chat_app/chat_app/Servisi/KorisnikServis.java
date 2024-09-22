@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KorisnikServis {
 
-    private static KorisnikRepo korisnikRepo;
+    private final KorisnikRepo korisnikRepo;
 
 
     public  void sacuvajKorisnika(Korisnik korisnik)

@@ -21,8 +21,8 @@ import java.util.List;
 public class RazgovorKontroler {
 
 
-    private static RazgovorService razgovorService;
-    private static SimpMessagingTemplate chat;
+    private final RazgovorService razgovorService;
+    private final SimpMessagingTemplate chat;
 
 
     @GetMapping(path = "/poruke/{posiljalacID}/{primalacID}")

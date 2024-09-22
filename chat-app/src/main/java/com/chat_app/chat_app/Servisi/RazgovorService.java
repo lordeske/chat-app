@@ -14,8 +14,8 @@ import java.util.List;
 public class RazgovorService {
 
 
-    private static RazgovorRepo razgovorRepo;
-    private static RazgovorSobaService  razgovorSobaService;
+    private final RazgovorRepo razgovorRepo;
+    private final RazgovorSobaService  razgovorSobaService;
 
 
 

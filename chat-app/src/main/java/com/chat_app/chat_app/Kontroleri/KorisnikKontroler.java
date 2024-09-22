@@ -4,11 +4,13 @@ package com.chat_app.chat_app.Kontroleri;
 import com.chat_app.chat_app.Modeli.Korisnik;
 import com.chat_app.chat_app.Servisi.KorisnikServis;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -16,7 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KorisnikKontroler {
 
-    private static KorisnikServis korisnikServis;
+
+    private final KorisnikServis korisnikServis;
 
 
 
@@ -43,6 +46,7 @@ public class KorisnikKontroler {
 
 
     @GetMapping(path = "/korisnici")
+    @ResponseBody
     public List<Korisnik> prikaziAktivne()
     {
        return korisnikServis.nadjiKonektovaneKorisnike();
