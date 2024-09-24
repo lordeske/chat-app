@@ -48,12 +48,15 @@ public class RazgovorKontroler {
 
         Razgovor sacuvanaPoruka = razgovorService.sacuvaj(razgovor);
         chat.convertAndSendToUser(
-                razgovor.getPrimalacID(),"/queue/poruke", PorukaNotif.builder()
+                razgovor.getPrimalacID(), "/queue/poruke",
+                PorukaNotif.builder()
                         .id(sacuvanaPoruka.getId())
                         .posiljalacID(sacuvanaPoruka.getPosiljalacID())
                         .primalacID(sacuvanaPoruka.getPrimalacID())
                         .poruka(sacuvanaPoruka.getPoruka())
+                        .build()
         );
+
 
 
 

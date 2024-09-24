@@ -36,7 +36,7 @@ public class KorisnikKontroler {
 
 
     @MessageMapping("/kornsik.diskonektujKorisnika")
-    @SendTo("korisnik/public")
+    @SendTo("/korisnik/public")
     public Korisnik diskonektuj(@Payload Korisnik korisnik)
     {
        korisnikServis.diskonektuj(korisnik);
