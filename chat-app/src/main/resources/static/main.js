@@ -1,4 +1,3 @@
-
 const usernamePage = document.querySelector('#username-page');
 const chatPage = document.querySelector('#chat-page');
 const usernameForm = document.querySelector('#usernameForm');
@@ -7,25 +6,48 @@ const messageInput = document.querySelector('#message');
 const connectingElement = document.querySelector('.connecting');
 const chatArea = document.querySelector('#chat-messages');
 const logout = document.querySelector('#logout');
+const slikaForm = document.querySelector("#slika");
 
 let stompClient = null;
 let nickname = null;
 let fullname = null;
+let slika = null;
 let selectedUserId = null;
 
 function connect(event) {
     nickname = document.querySelector('#nickname').value.trim();
     fullname = document.querySelector('#fullname').value.trim();
+    slika = slikaForm.files[0];
 
-    if (nickname && fullname) {
-        usernamePage.classList.add('hidden');
-        chatPage.classList.remove('hidden');
+    if (nickname && fullname && slika) {
+        const citac = new FileReader();
 
-        const socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
+        citac.readAsDataURL(slika);
 
-        stompClient.connect({}, onConnected, onError);
+        citac.onload = function () {
+            let slikaBase64 = citac.result;
+
+            //Uklanjanje tipa zbog springa
+            slikaBase64 = slikaBase64.replace(/^data:image\/[a-z]+;base64,/, '');
+
+            slika = slikaBase64;  // Postavi čist base64 string
+
+            usernamePage.classList.add('hidden');
+            chatPage.classList.remove('hidden');
+
+            const socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, onConnected, onError);
+        };
+
+        citac.onerror = function (error) {
+            console.error('Greška prilikom čitanja slike:', error);
+        };
+    } else {
+        alert("Molimo unesite korisničko ime, pravo ime i sliku!");
     }
+
     event.preventDefault();
 }
 
@@ -34,10 +56,15 @@ function onConnected() {
     stompClient.subscribe(`/korisnik/${nickname}/queue/poruke`, onMessageReceived);
     stompClient.subscribe(`/korisnik/public`, onMessageReceived);
 
-    // register the connected user
+    // Registruj povezanog korisnika
     stompClient.send("/app/korisnik.dodajKorisnika",
         {},
-        JSON.stringify({korisnickoIme: nickname, imeIPrezime: fullname, status: 'NA_MREZI'})
+        JSON.stringify({
+            korisnickoIme: nickname,
+            imeIPrezime: fullname,
+            status: 'NA_MREZI',
+            slika: slika  // slanje u 64 formatu
+        })
     );
     document.querySelector('#connected-user-fullname').textContent = fullname;
     findAndDisplayConnectedUsers().then();
@@ -66,7 +93,7 @@ function appendUserElement(user, connectedUsersList) {
     listItem.id = user.korisnickoIme;
 
     const userImage = document.createElement('img');
-    userImage.src = '../img/user_icon.png';
+    userImage.src = `data:image/jpeg;base64,${user.slika}`;
     userImage.alt = user.imeIPrezime;
 
     const usernameSpan = document.createElement('span');

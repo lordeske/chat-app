@@ -15,6 +15,7 @@ public class Korisnik {
     private String korisnickoIme;
     private String imeIPrezime;
     private Status status;
+    private byte[]  slika;
 
 
 

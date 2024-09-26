@@ -12,13 +12,15 @@
 
 <div class="user-form" id="username-page">
     <h2>Udjite u sobu za razgovor</h2>
-    <form id="usernameForm">
+    <form id="usernameForm" enctype="multipart/form-data">
         <label for="nickname">Korisnicko ime:</label>
         <input type="text" id="nickname" name="nickname" required>
 
         <label for="fullname">Pravo ime:</label>
         <input type="text" id="fullname" name="realname" required>
 
+        <label for="slika">Prilozite vasu sliku</label>
+        <input type="file" id="slika">
         <button type="submit">Udji u sobu</button>
     </form>
 </div>
