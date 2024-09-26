@@ -56,7 +56,7 @@ function onConnected() {
     stompClient.subscribe(`/korisnik/${nickname}/queue/poruke`, onMessageReceived);
     stompClient.subscribe(`/korisnik/public`, onMessageReceived);
 
-    // Registruj povezanog korisnika
+
     stompClient.send("/app/korisnik.dodajKorisnika",
         {},
         JSON.stringify({
