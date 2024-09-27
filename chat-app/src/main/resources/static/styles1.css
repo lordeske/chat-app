@@ -1,11 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
+}
+
+.hidden {
+    display: none;
 }
 
 body {
@@ -19,85 +22,126 @@ body {
 
 .chat-container {
     display: flex;
-    width: 70%;
-    min-height: 80vh;
+    max-width: 1200px;
+    min-width: 1200px;
+    min-height: 600px;
+    max-height: 600px;
+    margin: 20px;
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
 .users-list {
-    background: linear-gradient(to right, #4a00e0, #8e54e9); /* Primer gradijenta */
-    color: white;
-    padding: 20px;
     flex: 1;
+    background: linear-gradient(to right, #4a00e0, #8e54e9);
+    border-right: 1px solid #ccc;
+    padding: 20px 40px 40px 40px;
+    box-sizing: border-box;
+    color: #fff;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.users-list-container h2 {
-    color: #fff; /* Crna boja */
+
+.users-list-container {
+    height: 75%;
+    overflow-y: scroll;
 }
 
-.users-list h2 {
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-}
+
 
 .users-list ul {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.users-list ul li {
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #2980b9;
-    border-radius: 4px;
+.user-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    cursor: pointer;
 }
 
-.users-list ul li:hover {
-    background-color: #1e6b8f;
+.user-item.active {
+    background-color: #cdebff;
+    color: #4f4f4f;
+    padding: 6px;
+    border-radius: 5px;
 }
 
-.logout {
-    display: inline-block;
-    padding: 10px 20px;
-    background: linear-gradient(to left, #4776E6, #8e54e9); /* Gradient boje */
-    color: #fff; /* Bela boja teksta */
-    text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    font-weight: 500;
+.user-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
-.logout:hover {
-    background: linear-gradient(to right, #4776E6, #8e54e9); /* Obrnuti gradijent na hover */
-    letter-spacing: 0.5px; /* Efekat kod hovera */
+.user-item span {
+    font-weight: bold;
+}
+
+.user-item span.nbr-msg {
+    margin-left: 10px;
+    background-color: #f8fa6f;
+    color: white;
+    padding: 5px;
+    width: 15px;
+    border-radius: 50%;
+    height: 15px;
+}
+
+.separator {
+    height: 0.7px;
+    background-color: #ccc;
+    margin: 10px 0;
 }
 
 .chat-area {
-    flex: 2;
-    padding: 20px;
+    flex: 3;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    padding: 40px;
+    box-sizing: border-box;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
-.chat-messages {
+#chat-messages {
     flex-grow: 1;
-    overflow-y: auto;
-    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
     padding-bottom: 20px;
     margin-bottom: 20px;
 }
 
-.chat-messages .message {
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #f1f1f1;
-    border-radius: 4px;
+.message {
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.message p {
+    padding: 0 12px;
+    border-radius: 15px;
+    word-wrap: break-word;
+}
+
+.sender {
+    background: linear-gradient(to left, #4776E6, #8e54e9);
+    color: #fff;
+    align-self: flex-end;
+}
+
+.receiver {
+    background-color: #ecf0f1;
+    color: #333;
+    align-self: flex-start;
 }
 
 .message-input {
@@ -106,30 +150,42 @@ body {
 
 .message-input input {
     flex-grow: 1;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
     margin-right: 10px;
 }
-.hidden {
-    display: none;
-}
-
 
 .message-input button {
     background: linear-gradient(to left, #4776E6, #8e54e9);
     color: white;
-    padding: 0.4rem;
-    font-size: 0.9rem;
-    font-weight: 300;
+    padding: 0.6rem;
+    font-size: 1rem;
+    font-weight: 500;
     border-radius: 4px;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 100px; /* Možeš prilagoditi širinu po želji */
+    width: 140px;
 }
 
 .message-input button:hover {
     letter-spacing: 0.5px;
     background: linear-gradient(to right, #4776E6, #8e54e9);
+}
+
+.logout {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(to left, #4776E6, #8e54e9);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.logout:hover {
+    background: linear-gradient(to right, #4776E6, #8e54e9);
+    letter-spacing: 0.5px;
 }
