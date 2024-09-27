@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
+
 * {
     margin: 0;
-    border: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
@@ -10,101 +10,126 @@
 
 body {
     background: linear-gradient(45deg, #8e2de2, #4a00e0);
-    background-repeat: no-repeat;
-    min-height: 100vh;
-    min-width: 100vw;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100vh;
+    width: 100vw;
 }
 
-main.container {
-    background: white;
-    min-width: 320px;
-    min-height: 40vh;
-    padding: 2rem;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+.chat-container {
+    display: flex;
+    width: 70%;
+    min-height: 80vh;
+    background-color: #fff;
     border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-.user-form h2 {
-    font-weight: 600;
-    margin-bottom: 2rem;
-    position: relative;
-}
-
-.user-form h2::before {
-    content: '';
-    position: absolute;
-    height: 4px;
-    width: 25px;
-    bottom: 3px;
-    left: 0;
-    border-radius: 8px;
-    background: linear-gradient(45deg, #8e2de2, #4a00e0);
-}
-
-form {
+.users-list {
+    background: linear-gradient(to right, #4a00e0, #8e54e9); /* Primer gradijenta */
+    color: white;
+    padding: 20px;
+    flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
-.input-field {
-    position: relative;
-    margin-bottom: 1.5rem;
+.users-list-container h2 {
+    color: #fff; /* Crna boja */
 }
 
-.input-field .underline::before {
-    content: '';
-    position: absolute;
-    height: 1px;
-    width: 100%;
-    bottom: -5px;
-    left: 0;
-    background: rgba(0, 0, 0, 0.2);
+.users-list h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
 }
 
-.input-field .underline::after {
-    content: '';
-    position: absolute;
-    height: 1px;
-    width: 100%;
-    bottom: -5px;
-    left: 0;
-    background: linear-gradient(45deg, #8e2de2, #4a00e0);
-    transform: scaleX(0);
-    transition: all .3s ease-in-out;
-    transform-origin: left;
+.users-list ul {
+    list-style: none;
 }
 
-.input-field input:focus ~ .underline::after {
-    transform: scaleX(1);
+.users-list ul li {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #2980b9;
+    border-radius: 4px;
 }
 
-.input-field input {
-    outline: none;
-    font-size: 0.9rem;
-    color: rgba(0, 0, 0, 0.7);
-    width: 100%;
+.users-list ul li:hover {
+    background-color: #1e6b8f;
 }
 
-.input-field input::placeholder {
-    color: rgba(0, 0, 0, 0.5);
+.logout {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(to left, #4776E6, #8e54e9); /* Gradient boje */
+    color: #fff; /* Bela boja teksta */
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
-form input[type="submit"] {
-    padding: 0.4rem;
-    width: 100%;
+.logout:hover {
+    background: linear-gradient(to right, #4776E6, #8e54e9); /* Obrnuti gradijent na hover */
+    letter-spacing: 0.5px; /* Efekat kod hovera */
+}
+
+.chat-area {
+    flex: 2;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.chat-messages .message {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+}
+
+.message-input {
+    display: flex;
+}
+
+.message-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+.hidden {
+    display: none;
+}
+
+
+.message-input button {
     background: linear-gradient(to left, #4776E6, #8e54e9);
-    cursor: pointer;
     color: white;
+    padding: 0.4rem;
     font-size: 0.9rem;
     font-weight: 300;
     border-radius: 4px;
+    border: none;
+    cursor: pointer;
     transition: all 0.3s ease;
+    width: 100px; /* Možeš prilagoditi širinu po želji */
 }
 
-form input[type="submit"]:hover {
+.message-input button:hover {
     letter-spacing: 0.5px;
     background: linear-gradient(to right, #4776E6, #8e54e9);
 }

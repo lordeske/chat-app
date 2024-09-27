@@ -8,22 +8,34 @@
 </head>
 <body>
 
+<!--PRVI DIO-->
+<main class="container">
+    <div class="user-form" id="username-page">
+        <h2>Udjite u sobu za razgovor</h2>
+        <form id="usernameForm" enctype="multipart/form-data">
+            <div class="input-field">
+                <input type="text" id="nickname" name="nickname" placeholder="Korisnicko ime" required>
+                <div class="underline"></div>
+            </div>
+
+            <div class="input-field">
+                <input type="text" id="fullname" name="realname" placeholder="Pravo ime" required>
+                <div class="underline"></div>
+            </div>
+
+            <div class="input-field">
+                <label for="slika">Prilozite vasu sliku</label>
+                <input type="file" id="slika">
+                <div class="underline"></div>
+            </div>
+
+            <input type="submit" value="Udji u sobu">
+        </form>
+    </div>
+</main>
 
 
-<div class="user-form" id="username-page">
-    <h2>Udjite u sobu za razgovor</h2>
-    <form id="usernameForm" enctype="multipart/form-data">
-        <label for="nickname">Korisnicko ime:</label>
-        <input type="text" id="nickname" name="nickname" required>
-
-        <label for="fullname">Pravo ime:</label>
-        <input type="text" id="fullname" name="realname" required>
-
-        <label for="slika">Prilozite vasu sliku</label>
-        <input type="file" id="slika">
-        <button type="submit">Udji u sobu</button>
-    </form>
-</div>
+<!--DRUGI DIO-->
 
 <div class="chat-container hidden" id="chat-page">
     <div class="users-list">
@@ -50,6 +62,9 @@
         </form>
     </div>
 </div>
+
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>

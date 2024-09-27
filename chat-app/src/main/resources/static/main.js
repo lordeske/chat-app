@@ -34,11 +34,13 @@ function connect(event) {
 
             usernamePage.classList.add('hidden');
             chatPage.classList.remove('hidden');
+            promijeniCSS("styles1.css")
 
             const socket = new SockJS('/ws');
             stompClient = Stomp.over(socket);
 
             stompClient.connect({}, onConnected, onError);
+
         };
 
         citac.onerror = function (error) {
@@ -209,6 +211,18 @@ function onLogout() {
     );
     window.location.reload();
 }
+
+
+function promijeniCSS(CSSFajl) {
+    const stariLink = document.querySelector("link[rel=stylesheet]");
+    const noviLink = document.createElement("link"); // Kreiraj novi <link> element
+    noviLink.rel = "stylesheet";
+    noviLink.href = CSSFajl;
+
+    // Zamenjujemo stari <link> sa novim
+    document.head.replaceChild(noviLink, stariLink);
+}
+
 
 usernameForm.addEventListener('submit', connect, true); // step 1
 messageForm.addEventListener('submit', sendMessage, true);
