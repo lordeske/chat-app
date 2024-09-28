@@ -32,7 +32,7 @@ CSS Styling: The application features well-designed CSS for a sleek and visually
 ![Screenshot 1](chat-app/screenshots/Capture.JPG)
 
 ### Capture 2
-![Capture 2](./resources/screenshot/Capture1.png)
+![Screenshot 2](chat-app/screenshots/Capture1.JPG)
 
 ### Capture 3
-![Capture 3](./resources/screenshot/Capture2.png)
+![Screenshot 2](chat-app/screenshots/Capture2.JPG)
